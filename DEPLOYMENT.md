@@ -72,7 +72,7 @@ If Blueprint doesn't work, follow these steps:
    - **Root Directory**: Leave empty
    - **Runtime**: `Python 3`
    - **Build Command**: `./build.sh`
-   - **Start Command**: `cd backend && gunicorn marketplace.wsgi:application`
+   - **Start Command**: `cd backend && gunicorn marketplace.wsgi:application --bind 0.0.0.0:$PORT`
 
 4. Add Environment Variables:
    - `PYTHON_VERSION`: `3.11.0`

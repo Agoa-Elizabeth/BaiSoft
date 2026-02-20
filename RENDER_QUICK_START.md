@@ -24,7 +24,7 @@ git push origin main
 2. Connect your repo
 3. Settings:
    - **Build Command**: `./build.sh`
-   - **Start Command**: `cd backend && gunicorn marketplace.wsgi:application`
+   - **Start Command**: `cd backend && gunicorn marketplace.wsgi:application --bind 0.0.0.0:$PORT`
 
 4. Environment Variables (click "Add Environment Variable"):
    ```

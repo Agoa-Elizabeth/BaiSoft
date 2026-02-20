@@ -5,7 +5,7 @@ services:
     env: python
     region: oregon
     buildCommand: "./build.sh"
-    startCommand: "cd backend && gunicorn marketplace.wsgi:application"
+    startCommand: "cd backend && gunicorn marketplace.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
