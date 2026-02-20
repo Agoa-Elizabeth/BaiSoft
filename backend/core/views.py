@@ -4,11 +4,39 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .models import Business, User, Product, ChatMessage
 from .serializers import BusinessSerializer, UserSerializer, ProductSerializer, ChatMessageSerializer
 from .permissions import CanCreateProduct, CanApproveProduct, CanManageUsers
 import os
 
+@swagger_auto_schema(
+    method='post',
+    operation_description="Authenticate user and obtain JWT tokens",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['username', 'password'],
+        properties={
+            'username': openapi.Schema(type=openapi.TYPE_STRING, description='Username'),
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='Password'),
+        },
+    ),
+    responses={
+        200: openapi.Response(
+            description="Login successful",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'access': openapi.Schema(type=openapi.TYPE_STRING, description='Access token'),
+                    'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='Refresh token'),
+                    'user': openapi.Schema(type=openapi.TYPE_OBJECT, description='User details'),
+                }
+            )
+        ),
+        401: 'Invalid credentials'
+    }
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -25,16 +53,33 @@ def login_view(request):
         })
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+@swagger_auto_schema(
+    method='get',
+    operation_description="Get current authenticated user details",
+    responses={200: UserSerializer}
+)
 @api_view(['GET'])
 def me_view(request):
     return Response(UserSerializer(request.user).data)
 
 class BusinessViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing businesses.
+    
+    Provides CRUD operations for business entities.
+    Requires authentication.
+    """
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
     permission_classes = [IsAuthenticated]
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing users.
+    
+    Provides CRUD operations for users with role-based access control.
+    Only admins can create, update, or delete users.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
@@ -49,16 +94,24 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing products.
+    
+    Provides CRUD operations for products with role-based access control.
+    - Admins and approvers can see all products
+    - Other users can only see products from their business
+    - Products can be approved by users with approval permissions
+    """
     serializer_class = ProductSerializer
     
     def get_queryset(self):
         if self.action == 'list_public':
-            return Product.objects.filter(status=Product.APPROVED)
+            return Product.objects.filter(status=Product.APPROVED).order_by('-created_at')
         if self.request.user.is_authenticated:
             # Admins and approvers can see all products, others see only their business products
             if self.request.user.role in ['admin', 'approver']:
-                return Product.objects.all()
-            return Product.objects.filter(business=self.request.user.business)
+                return Product.objects.all().order_by('-created_at')
+            return Product.objects.filter(business=self.request.user.business).order_by('-created_at')
         return Product.objects.none()
     
     def get_permissions(self):
@@ -73,6 +126,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user, business=self.request.user.business)
     
+    @swagger_auto_schema(
+        operation_description="Approve a product (changes status to 'approved')",
+        responses={200: ProductSerializer}
+    )
     @action(detail=True, methods=['post'])
     def approve(self, request, pk=None):
         product = self.get_object()
@@ -80,12 +137,31 @@ class ProductViewSet(viewsets.ModelViewSet):
         product.save()
         return Response(ProductSerializer(product).data)
     
+    @swagger_auto_schema(
+        operation_description="Get list of approved products (public endpoint)",
+        responses={200: ProductSerializer(many=True)}
+    )
     @action(detail=False, methods=['get'], url_path='public')
     def list_public(self, request):
         products = self.get_queryset()
         serializer = self.get_serializer(products, many=True)
         return Response(serializer.data)
 
+@swagger_auto_schema(
+    method='post',
+    operation_description="Send a message to the AI chatbot and get a response",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['message'],
+        properties={
+            'message': openapi.Schema(type=openapi.TYPE_STRING, description='User message to the chatbot'),
+        },
+    ),
+    responses={
+        200: ChatMessageSerializer,
+        400: 'Message cannot be empty'
+    }
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def chatbot_view(request):
@@ -265,12 +341,25 @@ def chatbot_view(request):
                 'timestamp': '2024-01-01T00:00:00Z'
             })
 
+@swagger_auto_schema(
+    method='get',
+    operation_description="Get chat history (last 20 messages)",
+    responses={200: ChatMessageSerializer(many=True)}
+)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def chat_history_view(request):
     messages = ChatMessage.objects.all().order_by('-timestamp')[:20]
     return Response(ChatMessageSerializer(messages, many=True).data)
 
+@swagger_auto_schema(
+    method='delete',
+    operation_description="Clear all chat history",
+    responses={
+        200: openapi.Response(description="Chat history cleared successfully"),
+        500: 'Internal server error'
+    }
+)
 @api_view(['DELETE'])
 @permission_classes([AllowAny])
 def clear_chat_history_view(request):

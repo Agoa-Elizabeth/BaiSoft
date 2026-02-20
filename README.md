@@ -37,7 +37,7 @@ A modern, full-stack product marketplace application with AI-powered shopping as
 - **CSS3**: Modern styling with responsive design
 - **Axios**: HTTP client for API calls
 
-## 📦 Installation
+##  Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -70,7 +70,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 ```
 
-## 🎯 Usage
+##  Usage
 
 ### Getting Started
 1. Start the backend server: `python manage.py runserver`
@@ -91,7 +91,7 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
   - "Show me products under $100"
   - "Tell me about [product name]"
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ├── backend/                 # Django REST API
@@ -105,7 +105,7 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 └── docs/                  # Documentation files
 ```
 
-## 🔐 Security Features
+##  Security Features
 
 - JWT token authentication
 - Role-based access control
@@ -113,7 +113,7 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 - Input validation and sanitization
 - Environment variable configuration
 
-## 🤖 AI Features
+##  AI Features
 
 ### Zuri AI Assistant
 - Intelligent product recommendations
@@ -122,14 +122,14 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 - Chat history management
 - Context-aware responses
 
-## 📱 Responsive Design
+##  Responsive Design
 
 - Mobile-first approach
 - Tablet and desktop optimized
 - Touch-friendly interface
 - Accessible design principles
 
-## 🚀 Deployment
+##  Deployment
 
 ### Production Checklist
 - [ ] Set `DEBUG=False` in production
@@ -144,7 +144,7 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 - **Frontend**: Vercel, Netlify
 - **Database**: PostgreSQL on Railway, AWS RDS
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature-name`
@@ -152,16 +152,16 @@ OPENAI_API_KEY=your-openai-api-key  # Optional for AI features
 4. Push to branch: `git push origin feature-name`
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
+##  Team
 
 - **Developer**: Elizabeth Agoa
 - **AI Assistant**: Zuri (OpenAI-powered)
 
-## 🆘 Support
+##  Support
 
 For support, please open an issue on GitHub or contact the development team.
 

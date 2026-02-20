@@ -1,5 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+
+def validate_word_count(value):
+    """Validate that the text does not exceed 100 words"""
+    word_count = len(value.strip().split())
+    if word_count > 100:
+        raise ValidationError(f'Description must not exceed 100 words. Current count: {word_count}')
 
 class Business(models.Model):
     name = models.CharField(max_length=255)
@@ -45,7 +52,7 @@ class Product(models.Model):
     ]
     
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(validators=[validate_word_count])
     price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=DRAFT)
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='products')

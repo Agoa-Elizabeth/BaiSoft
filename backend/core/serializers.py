@@ -27,6 +27,13 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'price', 'status', 'business', 'created_by', 
                   'created_by_name', 'business_name', 'created_at', 'updated_at']
         read_only_fields = ['created_by', 'created_at', 'updated_at']
+    
+    def validate_description(self, value):
+        """Validate that description does not exceed 100 words"""
+        word_count = len(value.strip().split())
+        if word_count > 100:
+            raise serializers.ValidationError(f'Description must not exceed 100 words. Current count: {word_count}')
+        return value
 
 class ChatMessageSerializer(serializers.ModelSerializer):
     class Meta:

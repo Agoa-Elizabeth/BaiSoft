@@ -2,7 +2,7 @@
 
 ## Assignment Requirements
 
-### ✅ Section 1: Backend (Django)
+### Section 1: Backend (Django)
 
 #### Core Requirements
 - [x] **Authentication & Users**
@@ -49,7 +49,7 @@
 
 ---
 
-### ✅ Section 2: Frontend (Next.js)
+###  Section 2: Frontend (Next.js)
 
 #### Core Requirements
 - [x] **Authentication**
@@ -78,7 +78,7 @@
 
 ---
 
-### ✅ Section 3: AI Chatbot
+###  Section 3: AI Chatbot
 
 #### Core Requirements
 - [x] **Chatbot Capabilities**
@@ -329,9 +329,9 @@ I am submitting my completed take-home assignment for the Product Marketplace pr
 GitHub Repository: https://github.com/yourusername/product-marketplace
 
 I have successfully implemented all three sections:
-✅ Backend (Django) - Complete with authentication, roles, and product management
-✅ Frontend (Next.js) - Complete with public listing, dashboard, and role-based UI
-✅ AI Chatbot - Complete with OpenAI integration and chat history
+ Backend (Django) - Complete with authentication, roles, and product management
+ Frontend (Next.js) - Complete with public listing, dashboard, and role-based UI
+ AI Chatbot - Complete with OpenAI integration and chat history
 
 Key highlights:
 - Full role-based access control (Admin, Editor, Approver, Viewer)
@@ -373,13 +373,13 @@ Before submitting, verify:
 
 ## Success Criteria Met
 
-✅ **Completeness**: All three sections implemented  
-✅ **Code Quality**: Clean, readable, maintainable code  
-✅ **Functionality**: All requirements working correctly  
-✅ **Documentation**: Comprehensive and clear  
-✅ **Best Practices**: Following Django and Next.js conventions  
-✅ **Security**: Proper authentication and authorization  
-✅ **User Experience**: Intuitive and responsive UI  
+ **Completeness**: All three sections implemented  
+ **Code Quality**: Clean, readable, maintainable code  
+ **Functionality**: All requirements working correctly  
+ **Documentation**: Comprehensive and clear  
+ **Best Practices**: Following Django and Next.js conventions  
+ **Security**: Proper authentication and authorization  
+ **User Experience**: Intuitive and responsive UI  
 
 ---
 

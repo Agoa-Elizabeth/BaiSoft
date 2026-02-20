@@ -7,6 +7,7 @@ import Link from 'next/link';
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewingProduct, setViewingProduct] = useState<any>(null);
 
   useEffect(() => {
     loadProducts();
@@ -84,7 +85,30 @@ export default function Home() {
                     </div>
                     <div className="product-content">
                       <h3 className="product-name">{product.name}</h3>
-                      <p className="product-description">{product.description}</p>
+                      <p className="product-description" style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical'
+                      }}>
+                        {product.description}
+                      </p>
+                      <button
+                        onClick={() => setViewingProduct(product)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#2563eb',
+                          cursor: 'pointer',
+                          padding: '0.25rem 0',
+                          fontSize: '0.875rem',
+                          textDecoration: 'underline',
+                          marginTop: '0.5rem'
+                        }}
+                      >
+                        Read more
+                      </button>
                       <div className="product-footer">
                         <div className="product-price">
                           <span className="price-currency">$</span>
@@ -103,6 +127,150 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Product Detail Modal */}
+      {viewingProduct && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem'
+          }}
+          onClick={() => setViewingProduct(null)}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              padding: '2rem',
+              borderRadius: '0.75rem',
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '85vh',
+              overflow: 'auto',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.5rem' }}>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
+                  {viewingProduct.name}
+                </h2>
+                <p style={{ margin: '0.5rem 0 0 0', color: '#6b7280', fontSize: '0.875rem' }}>
+                  by <span style={{ fontWeight: '500', color: '#374151' }}>{viewingProduct.business_name}</span>
+                </p>
+              </div>
+              <button
+                onClick={() => setViewingProduct(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '2rem',
+                  cursor: 'pointer',
+                  color: '#6b7280',
+                  padding: '0',
+                  lineHeight: 1,
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '0.375rem',
+                  transition: 'background 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#f3f4f6'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{
+              marginBottom: '1.5rem',
+              padding: '1.5rem',
+              backgroundColor: '#f9fafb',
+              borderRadius: '0.5rem',
+              border: '1px solid #e5e7eb'
+            }}>
+              <h3 style={{
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                color: '#6b7280',
+                marginBottom: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>
+                Description
+              </h3>
+              <p style={{
+                lineHeight: '1.75',
+                color: '#374151',
+                margin: 0,
+                fontSize: '1rem',
+                whiteSpace: 'pre-wrap'
+              }}>
+                {viewingProduct.description}
+              </p>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '1.5rem',
+              backgroundColor: '#eff6ff',
+              borderRadius: '0.5rem',
+              border: '1px solid #bfdbfe'
+            }}>
+              <div>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: '#1e40af',
+                  margin: '0 0 0.25rem 0',
+                  fontWeight: '500'
+                }}>
+                  Price
+                </p>
+                <p style={{
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  color: '#2563eb',
+                  margin: 0,
+                  lineHeight: 1
+                }}>
+                  ${viewingProduct.price}
+                </p>
+              </div>
+              <button
+                onClick={() => setViewingProduct(null)}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: '#2563eb',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CTA Section */}
       <section className="cta-section">
@@ -139,7 +307,7 @@ export default function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2024 Product Marketplace. All rights reserved.</p>
+            <p>&copy; 2026 Product Marketplace. All rights reserved.</p>
           </div>
         </div>
       </footer>
